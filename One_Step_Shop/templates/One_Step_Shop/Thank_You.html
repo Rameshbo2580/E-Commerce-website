@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Confirmation - SuperHero Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
+    :root {
+      --primary: #ff6f00;
+      --primary-dark: #bf360c;
+      --accent: #ffeb3b;
+      --dark: #3e2723;
+      --light: #fff3e0;
+    }
+    
+    body, html {
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--light);
+      display: flex;
+      justify-content: center; 
+      align-items: center;     
+      text-align: center;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 90%;
+      width: 600px;
+      box-shadow: 0 10px 30px rgba(255, 111, 0, 0.3);
+      margin: 20px;
+      border: 1px solid var(--primary);
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    p {
+      font-size: clamp(1rem, 3vw, 1.1rem);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .order-details {
+      background: rgba(255, 111, 0, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      margin: 25px 0;
+      text-align: left;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .order-details p {
+      margin-bottom: 10px;
+    }
+
+    .order-details p:last-child {
+      margin-bottom: 0;
+    }
+
+    .super-icon {
+      font-size: clamp(2.5rem, 8vw, 3rem);
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .btn {
+      margin-top: 2rem;
+      display: inline-block;
+      padding: 12px 30px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+      width: auto;
+    }
+
+    .btn:hover, .btn:focus {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 111, 0, 0.6);
+    }
+
+    .confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px;
+      }
+      
+      .order-details {
+        margin: 20px 0;
+      }
+      
+      .btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body, html {
+        background-attachment: scroll;
+      }
+      
+      .container {
+        padding: 25px 20px;
+        margin: 15px;
+        max-width: 95%;
+      }
+      
+      .order-details {
+        padding: 12px 10px;
+        margin: 15px 0;
+      }
+      
+      .btn {
+        width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      h1::after {
+        width: 60px;
+        bottom: -8px;
+      }
+    }
+    @media (max-height: 500px) {
+      body, html {
+        align-items: flex-start;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="super-icon">🦸</div>
+    <h1>Order Confirmed!</h1>
+    <p>Thank you for your purchase at Your One-Step Store. Your order has been successfully processed and will be prepared for shipment.</p>
+    
+    <div class="order-details">
+      <p><strong>Order Number:</strong> #SH{{ order_number }}</p>
+      <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
+      <p><strong>Need Help?</strong> Contact our support team at support@onestepstore.com</p>
+    </div>
+
+    <a href="{% url 'all_products' %}" class="btn">Continue Shopping</a>
+  </div>
+
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const orderNumber = Math.floor(Math.random() * 1000000);
+      const orderNumberElement = document.querySelector('.order-details p:first-child');
+      orderNumberElement.innerHTML = `<strong>Order Number:</strong> #SH${orderNumber.toString().padStart(6, '0')}`;
+      
+      // Confetti effect
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#ff6f00', '#ffeb3b', '#ffffff']
+        });
+      }, 300);
+    });
+  </script>
+
+</body>
+</html>

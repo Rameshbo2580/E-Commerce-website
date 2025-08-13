@@ -1,0 +1,711 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your One-Step Shop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+    body {
+      font-family: 'Comic Neue', cursive, Arial, sans-serif;
+      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+      margin: 0; padding: 30px;
+      color: #3e2723;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background-color: #f8b500;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      font-family: 'Comic Neue', cursive, Arial, sans-serif;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .header h1 {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      font-weight: 700;
+      font-size: 36px;
+      color: #3e2723;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .header .left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .header img {
+      height: 50px;
+      width: auto;
+    }
+
+    .header .right.auth-buttons a,
+    .header .right.auth-buttons form button {
+      color: white;
+      background-color: #bf360c;
+      padding: 8px 16px;
+      margin-left: 10px;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: 'Comic Neue', cursive, Arial, sans-serif;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .header .right.auth-buttons form {
+      display: inline;
+    }
+
+    .header .right.auth-buttons a:hover,
+    .header .right.auth-buttons form button:hover {
+      background-color: #ff6f00;
+    }
+
+    .search-add-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+    }
+
+    .buttons-left {
+      display: flex;
+      gap: 10px;
+      position: absolute;
+      left: 0;
+    }
+
+    .add-product-button,
+    .view-cart-button {
+      background-color: #bf360c;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 18px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      box-shadow: 0 3px 6px rgba(255, 111, 0, 0.5);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .add-product-button:hover,
+    .view-cart-button:hover {
+      background-color: orange;
+      transform: scale(1.05);
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .search-form input[type="text"] {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: none;
+      font-size: 16px;
+      font-family: 'Comic Neue', cursive;
+    }
+
+    .search-form button {
+      background-color: #bf360c;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Comic Neue', cursive;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .search-form button:hover {
+      background-color: #ff6f00;
+    }
+
+    .category-title {
+      font-size: 28px;
+      margin: 40px 0 20px;
+      color: #d84315;
+      border-bottom: 3px solid #ff6f00;
+      padding-bottom: 5px;
+      letter-spacing: 1.5px;
+    }
+
+    .main {
+      display: flex;
+      overflow-x: auto;
+      padding: 15px 10px;
+      gap: 25px;
+      scroll-behavior: smooth;
+      border-radius: 16px;
+      background-color: #be7971;
+      box-shadow: 0 8px 16px rgba(255, 152, 0, 0.4);
+    }
+
+    .main::-webkit-scrollbar {
+      height: 12px;
+    }
+
+    .main::-webkit-scrollbar-track {
+      background: #ffe0b2;
+      border-radius: 10px;
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background-color: #ff6f00;
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .child {
+      flex: 0 0 auto;
+      width: 260px;
+      height: 420px;
+      background: #ffcc80;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(255, 111, 0, 0.5);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .child.animate-in {
+      animation: fadeSlideUp 0.6s forwards;
+    }
+
+    .child img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 16px;
+      object-position: top;
+      margin-bottom: 12px;
+      border: 3px solid #ff6f00;
+      background: white;
+    }
+
+    .child h2 {
+      font-size: 22px;
+      color: #bf360c;
+      margin: 0 0 8px 0;
+      text-align: center;
+      text-shadow: 1px 1px 2px #fff3e0;
+    }
+
+    .child p {
+      font-size: 16px;
+      color: #5d4037;
+      margin: 0 0 8px 0;
+      text-align: center;
+    }
+
+    .description {
+      font-size: 14px;
+      color: #6d4c41;
+      max-height: 90px;
+      overflow-y: auto;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: #fff8e1;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .description::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .description::-webkit-scrollbar-thumb {
+      background-color: #ffb74d;
+      border-radius: 10px;
+    }
+
+    .no-products {
+      text-align: center;
+      font-size: 24px;
+      color: #bf360c;
+      margin-top: 80px;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px #070606;
+    }
+
+    @keyframes fadeSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 10px;
+    }
+
+    .add-to-cart-btn,
+    .buy-now-btn {
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Comic Neue', cursive, Arial, sans-serif;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    .add-to-cart-btn {
+      background-color: #ff6f00;
+      color: white;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: #e65100;
+      transform: scale(1.05);
+    }
+
+    .add-to-cart-btn.added {
+      background-color: #4CAF50;
+      cursor: default;
+    }
+
+    .buy-now-btn {
+      background-color: #009688;
+      color: white;
+    }
+
+    .buy-now-btn:hover {
+      background-color: #00796b;
+      transform: scale(1.05);
+    }
+
+    /* Notification style */
+    .notification {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-family: 'Comic Neue', cursive;
+      animation: slideIn 0.5s, fadeOut 0.5s 2.5s forwards;
+    }
+
+    @keyframes slideIn {
+      from {right: -300px; opacity: 0;}
+      to {right: 20px; opacity: 1;}
+    }
+
+    @keyframes fadeOut {
+      from {opacity: 1;}
+      to {opacity: 0;}
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+      .header h1 {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+      }
+      
+      .header h1 {
+        position: static;
+        transform: none;
+        margin: 10px 0;
+        order: 2;
+      }
+      
+      .header .left,
+      .header .right.auth-buttons {
+        justify-content: center;
+        width: 100%;
+      }
+      
+      .header .left {
+        order: 1;
+      }
+      
+      .header .right.auth-buttons {
+        order: 3;
+        margin-top: 10px;
+      }
+      
+      .search-add-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .buttons-left {
+        position: static;
+        justify-content: center;
+      }
+      
+      .child {
+        width: 220px;
+        height: 380px;
+      }
+      
+      .child h2 {
+        font-size: 18px;
+      }
+      
+      .child img {
+        height: 150px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 24px;
+      }
+      
+      .category-title {
+        font-size: 22px;
+        margin: 30px 0 15px;
+      }
+      
+      .child {
+        width: 180px;
+        height: 350px;
+        padding: 10px;
+      }
+      
+      .child img {
+        height: 120px;
+      }
+      
+      .child p {
+        font-size: 14px;
+      }
+      
+      .description {
+        font-size: 12px;
+      }
+      
+      .button-group {
+        gap: 20px;
+      }
+      
+      .add-to-cart-btn,
+      .buy-now-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .header h1 {
+        font-size: 20px;
+      }
+      
+      .header .right.auth-buttons a,
+      .header .right.auth-buttons form button {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+      
+      .add-product-button,
+      .view-cart-button {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      
+      .search-form {
+        width: 100%;
+      }
+      
+      .search-form input[type="text"] {
+        padding: 8px 12px;
+      }
+      
+      .search-form button {
+        padding: 8px 15px;
+      }
+      
+      .category-title {
+        font-size: 20px;
+      }
+      
+      .child {
+        width: 160px;
+        height: 320px;
+      }
+      
+      .child h2 {
+        font-size: 16px;
+      }
+      
+      .child img {
+        height: 100px;
+      }
+      
+      .button-group {
+        gap: 15px;
+      }
+      
+      .notification {
+        font-size: 14px;
+        padding: 10px;
+        bottom: 10px;
+        right: 10px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .child {
+        width: 140px;
+        height: 300px;
+      }
+      
+      .child img {
+        height: 90px;
+      }
+      
+      .button-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .add-to-cart-btn,
+      .buy-now-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="left">
+      <img src="{% static 'Image/viber-removebg-preview.jpg' %}" alt="logo" />
+    </div>
+    <h1>Your One-Stop Shop</h1>
+    <div class="right auth-buttons">
+      {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="search-add-container">
+    <div class="buttons-left">
+      {% if user.is_authenticated %}
+        <a href="{% url 'add_product' %}" class="add-product-button">＋ Add Product</a>
+        <a href="{% url 'view_cart' %}" class="view-cart-button">🛒 View Cart</a>
+      {% endif %}
+    </div>
+
+    <form method="get" action="{% url 'all_products' %}" class="search-form">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search products..."
+        value="{{ query }}"
+        autocomplete="off"
+      />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Notification div -->
+ <div id="notification" class="notification">
+  Product added to cart! 🎉
+</div>
+
+{% if search_mode %}
+  {% if query %}
+    <h2 class="category-title">Search Results for "{{ query }}"</h2>
+    {% if search_results %}
+      <div class="main">
+        {% for product in search_results %}
+          <div class="child">
+            <h2>{{ product.name }}</h2>
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+            {% else %}
+              <img src="{% static 'default_product.png' %}" alt="No Image" />
+            {% endif %}
+            <p><strong>Price:</strong> Rs {{ product.price }}</p>
+            <div class="description">{{ product.description|linebreaks }}</div>
+            <div class="button-group">
+              <form action="{% url 'add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+                <button type="submit" class="add-to-cart-btn">🛒 Add</button>
+              </form>
+              <form action="{% url 'buy_now' product.id %}" method="post" class="buy-now-form">
+                {% csrf_token %}
+                <button type="submit" class="buy-now-btn">Buy Now</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-products">No products found matching your search.</p>
+    {% endif %}
+  {% endif %}
+{% else %}
+  {% if categories_with_products %}
+    {% for category, cat_products in categories_with_products %}
+      <h2 class="category-title">{{ category.name }}</h2>
+      {% if cat_products %}
+        <div class="main">
+          {% for product in cat_products %}
+            <div class="child">
+              <h2>{{ product.name }}</h2>
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+              {% else %}
+                <img src="{% static 'default_product.png' %}" alt="No Image" />
+              {% endif %}
+              <p><strong>Price:</strong> Rs {{ product.price }}</p>
+              <div class="description">{{ product.description|linebreaks }}</div>
+              <div class="button-group">
+                <form action="{% url 'add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+                  {% csrf_token %}
+                  <button type="submit" class="add-to-cart-btn">🛒 Add</button>
+                </form>
+                <form action="{% url 'buy_now' product.id %}" method="post" class="buy-now-form">
+                  {% csrf_token %}
+                  <button type="submit" class="buy-now-btn">Buy Now</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="no-products">No products in {{ category.name }}.</p>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <p class="no-products">No categories found.</p>
+  {% endif %}
+{% endif %}
+
+  <script>
+    // Animate product cards when they appear
+    window.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.child');
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.add('animate-in');
+        }, i * 150);
+      });
+
+      // Add to cart functionality
+      document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const button = this.querySelector('.add-to-cart-btn');
+          const originalText = button.textContent;
+          const originalClass = button.className;
+          
+          try {
+            const response = await fetch(this.action, {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: `csrfmiddlewaretoken=${this.querySelector('[name=csrfmiddlewaretoken]').value}`
+            });
+            
+            if (response.ok) {
+              button.textContent = 'Added!';
+              button.className = 'add-to-cart-btn added';
+              button.disabled = true;
+              
+              const notification = document.getElementById('notification');
+              notification.style.display = 'block';
+              
+              setTimeout(() => {
+                notification.style.display = 'none';
+              }, 3000);
+              
+              setTimeout(() => {
+                button.textContent = originalText;
+                button.className = originalClass;
+                button.disabled = false;
+              }, 3000);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            button.textContent = originalText;
+            button.className = originalClass;
+            button.disabled = false;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
+

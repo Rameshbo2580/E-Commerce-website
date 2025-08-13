@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+    body {
+      font-family: 'Comic Neue', cursive;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 15px 30px;
+      background-image: url('https://img.freepik.com/free-vector/cute-cartoon-superhero-pattern_53876-108314.jpg');
+      background-size: cover;
+      background-repeat: repeat;
+      color: #0b1e2d;
+      position: relative;
+      z-index: 0;
+      user-select: none;
+      background-color: rgba(255, 243, 224, 0.85);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 36px;
+      color: #2979ff;
+      text-shadow: 1px 1px 0 #d81b60, -1px -1px 0 #4fc3f7;
+      letter-spacing: 1px;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0 auto 30px;
+      padding: 0;
+      max-height: 480px;
+      overflow-y: auto;
+      background: rgba(255, 243, 224, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    ul::-webkit-scrollbar {
+      width: 6px;
+    }
+    ul::-webkit-scrollbar-thumb {
+      background-color: #2979ffcc;
+      border-radius: 3px;
+    }
+    ul::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    li {
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 9px rgba(0, 0, 0, 0.13);
+      font-size: 15px;
+      background-color: #fff3e0;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+
+    li:hover {
+      box-shadow: 0 8px 20px rgba(41, 121, 255, 0.5);
+      transform: translateY(-3px);
+    }
+
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #2979ff;
+      box-shadow: 0 3px 7px rgba(41, 121, 255, 0.6);
+      flex-shrink: 0;
+    }
+
+    strong {
+      font-size: 17px;
+      color: #0b1e2d;
+      display: block;
+    }
+
+    li > div {
+      flex-grow: 1;
+      line-height: 1.4;
+      user-select: text;
+      min-width: 0;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      margin-left: 8px;
+    }
+    .quantity-controls button {
+      background-color: #2979ff;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(41, 121, 255, 0.7);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      height: 26px;
+      line-height: 1;
+    }
+    .quantity-controls button:hover {
+      background-color: #1c54b2;
+      transform: scale(1.1);
+      box-shadow: 0 6px 14px rgba(28, 84, 178, 0.9);
+    }
+    .quantity-controls span {
+      font-weight: 700;
+      font-size: 15px;
+      width: 24px;
+      text-align: center;
+      color: #0b1e2d;
+      user-select: text;
+    }
+
+    form.remove-form {
+      margin-left: auto;
+    }
+    form.remove-form button {
+      background-color: #f44336;
+      border: none;
+      padding: 8px 15px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 20px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 5px 12px rgba(244, 67, 54, 0.7);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    form.remove-form button:hover {
+      background-color: #b71c1c;
+      transform: scale(1.1);
+      box-shadow: 0 7px 16px rgba(183, 28, 28, 0.9);
+    }
+
+    p.empty-cart {
+      text-align: center;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #7d7a7a;
+      margin-top: 100px;
+      user-select: none;
+      background: rgba(255, 243, 224, 0.85);
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(255, 243, 224, 0.95);
+      padding: 15px 20px;
+      border-radius: 20px;
+      box-shadow: 0 5px 18px rgba(41, 121, 255, 0.2);
+    }
+    .cart-summary .total-label {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #0b1e2d;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+    .cart-summary .total-value {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #2979ff;
+      letter-spacing: 0.8px;
+      user-select: none;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-start;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    a.btn, button.checkout-btn {
+      background: #4fc3f7;
+      color: #0b1e2d;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 7px 22px rgba(79, 195, 247, 0.8);
+      border: none;
+      transition: background-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    a.btn::after, button.checkout-btn::after {
+      content: '→';
+      font-weight: 900;
+      font-size: 1.1rem;
+      line-height: 1;
+      color: #0b1e2d;
+      transition: transform 0.3s ease;
+    }
+
+    a.btn:hover, button.checkout-btn:hover {
+      background: #d81b60;
+      color: white;
+      box-shadow: 0 14px 32px rgba(216, 27, 96, 0.9);
+      transform: scale(1.07);
+    }
+
+    a.btn:hover::after, button.checkout-btn:hover::after {
+      transform: translateX(4px);
+      color: white;
+    }
+
+    button.clear-cart-btn {
+      background: #2979ff;
+      color: #e0e6e8;
+      padding: 7px 16px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(41, 121, 255, 0.85);
+      border: none;
+      transition: background-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      user-select: none;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    button.clear-cart-btn::after {
+      content: '✕';
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #e0e6e8;
+      transition: transform 0.3s ease;
+    }
+
+    button.clear-cart-btn:hover {
+      background: #d81b60;
+      box-shadow: 0 12px 28px rgba(216, 27, 96, 0.95);
+      transform: scale(1.07);
+      color: white;
+    }
+
+    button.clear-cart-btn:hover::after {
+      transform: rotate(90deg);
+      color: white;
+    }
+
+    /* Responsive Media Queries */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 32px;
+        margin-bottom: 18px;
+      }
+      
+      ul {
+        max-height: 400px;
+      }
+      
+      li {
+        padding: 10px 14px;
+        margin: 8px 12px;
+        flex-wrap: wrap;
+      }
+      
+      img {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .quantity-controls {
+        margin-left: 0;
+        order: 3;
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      form.remove-form {
+        margin-left: 0;
+        order: 4;
+        width: 100%;
+        text-align: right;
+      }
+      
+      .cart-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 16px;
+      }
+      
+      button.clear-cart-btn {
+        margin-left: 0;
+        width: 100%;
+      }
+      
+      .actions {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      a.btn, button.checkout-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0 10px 20px;
+        margin: 15px auto;
+      }
+      
+      h1 {
+        font-size: 28px;
+        margin-bottom: 15px;
+      }
+      
+      li {
+        padding: 8px 12px;
+        margin: 6px 10px;
+        border-radius: 12px;
+      }
+      
+      strong {
+        font-size: 16px;
+      }
+      
+      li > div {
+        font-size: 14px;
+      }
+      
+      .quantity-controls button {
+        padding: 4px 8px;
+        font-size: 15px;
+        min-width: 24px;
+        height: 24px;
+      }
+      
+      form.remove-form button {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      
+      .cart-summary .total-label {
+        font-size: 1.2rem;
+      }
+      
+      .cart-summary .total-value {
+        font-size: 1.4rem;
+      }
+      
+      p.empty-cart {
+        font-size: 1.1rem;
+        margin-top: 80px;
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 24px;
+      }
+      
+      li {
+        gap: 8px;
+      }
+      
+      img {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .quantity-controls {
+        gap: 4px;
+      }
+      
+      .quantity-controls span {
+        width: 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Shopping Cart</h1>
+
+  {% if cart_items %}
+    <ul>
+      {% for item in cart_items %}
+      <li>
+        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+        <div>
+          <strong>{{ item.product.name }}</strong><br />
+          Price: Rs. {{ item.product.price }}<br />
+          Subtotal: Rs. {{ item.subtotal }}
+        </div>
+
+        <!-- Quantity update form -->
+        <form action="{% url 'update_cart_quantity' item.product.id %}" method="post" class="quantity-controls">
+          {% csrf_token %}
+          <button type="submit" name="action" value="decrease" aria-label="Decrease quantity">−</button>
+          <span>{{ item.quantity }}</span>
+          <button type="submit" name="action" value="increase" aria-label="Increase quantity">+</button>
+        </form>
+
+        <!-- Remove item -->
+        <form action="{% url 'remove_from_cart' item.product.id %}" method="post" class="remove-form">
+          {% csrf_token %}
+          <button type="submit" aria-label="Remove item">Remove</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="cart-summary">
+      <p class="total-label">Total:</p>
+      <p class="total-value">Rs {{ total }}</p>
+
+      <!-- Fixed Clear Cart button wrapped in POST form -->
+      <form action="{% url 'clear_cart' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="clear-cart-btn" aria-label="Clear cart">Clear Cart</button>
+      </form>
+    </div>
+
+    <div class="actions">
+      <a href="{% url 'all_products' %}" class="btn">Continue Shopping</a>
+
+      <form action="{% url 'checkout' %}" method="get" style="margin:0;">
+        <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+      </form>
+    </div>
+
+  {% else %}
+    <p class="empty-cart">Your cart is currently empty. Start shopping now!</p>
+    <div style="text-align:center; margin-top: 20px;">
+      <a href="{% url 'all_products' %}" class="btn">Shop Now</a>
+    </div>
+  {% endif %}
+
+</body>
+</html>
